@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TRIVIA CHAOS 2.0 - Cyber Party Game</title>
+    <!-- PeerJS per Multiplayer P2P WebRTC -->
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070913;
+            --bg-card: #0d1127;
+            --bg-card-hover: #161b3d;
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff0055;
+            --neon-purple: #9d00ff;
+            --neon-green: #00ff66;
+            --neon-yellow: #ffe600;
+            --neon-orange: #ff6600;
+            --text-main: #f0f4f8;
+            --text-muted: #8a99ad;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --font-head: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 85, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.08) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 12px;
+            overflow-x: hidden;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 92vh;
+            background: rgba(13, 17, 39, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glow);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.15), inset 0 0 15px rgba(255, 0, 85, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
+        }
+
+        /* EFFECT OVERLAYS FOR APPLIED INGANNI */
+        #app.effect-silenzia {
+            border: 3px solid var(--neon-pink) !important;
+            box-shadow: 0 0 40px rgba(255, 0, 85, 0.6) !important;
+        }
+
+        #app.effect-sotto-sopra {
+            transform: scaleY(-1);
+            filter: hue-rotate(90deg);
+        }
+
+        #app.effect-sotto-sopra .no-flip {
+            transform: scaleY(-1);
+        }
+
+        #app.effect-anarchia {
+            animation: glitchShake 0.3s infinite alternate;
+        }
+
+        @keyframes glitchShake {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-2px, 2px); }
+            100% { transform: translate(2px, -1px); }
+        }
+
+        /* HEADER TYPOGRAPHY */
+        .cyber-title {
+            font-family: var(--font-head);
+            font-weight: 900;
+            font-size: 1.8rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+
+        .cyber-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        /* FORM INPUTS & BUTTONS */
+        .cyber-input {
+            width: 100%;
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: rgba(7, 9, 19, 0.7);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: var(--radius-md);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-input:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-cyber {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: var(--radius-md);
+            border: none;
+            font-family: var(--font-head);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--neon-pink), #b3003b);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3);
+        }
+
+        .btn-cyber:active {
+            transform: scale(0.97);
+        }
+
+        .btn-cyber.secondary {
+            background: linear-gradient(135deg, var(--neon-cyan), #0099a3);
+            color: #070913;
+            box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
+        }
+
+        .btn-cyber:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* STATUS BADGES BAR */
+        .status-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 10px;
+            min-height: 26px;
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+
+        .badge-silenzia { background: rgba(255, 0, 85, 0.2); color: var(--neon-pink); border: 1px solid var(--neon-pink); }
+        .badge-sotto-sopra { background: rgba(255, 230, 0, 0.2); color: var(--neon-yellow); border: 1px solid var(--neon-yellow); }
+        .badge-anarchia { background: rgba(157, 0, 255, 0.2); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
+        .badge-falsa-pista { background: rgba(255, 102, 0, 0.2); color: var(--neon-orange); border: 1px solid var(--neon-orange); }
+        .badge-scudo { background: rgba(0, 243, 255, 0.2); color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
+        .badge-riflesso { background: rgba(0, 255, 102, 0.2); color: var(--neon-green); border: 1px solid var(--neon-green); }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.8; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1.02); }
+        }
+
+        /* GAME HEADER STATS */
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-head);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            background: rgba(7, 9, 19, 0.5);
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 12px;
+        }
+
+        .category-badge {
+            background: var(--neon-purple);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* TIMER BAR */
+        .timer-container {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+            width: 100%;
+            transition: width 1s linear, background-color 0.3s;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* QUESTION CONTAINER & IMAGE */
+        .question-card {
+            background: rgba(7, 9, 19, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--text-main);
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .question-image {
+            max-width: 100%;
+            max-height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        /* ANSWER OPTIONS GRID */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .opt-btn {
+            background: rgba(22, 27, 61, 0.8);
+            color: var(--text-main);
+            border: 1.5px solid rgba(0, 243, 255, 0.25);
+            border-radius: var(--radius-md);
+            padding: 12px 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            min-height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        .opt-btn.selected {
+            border-color: var(--neon-pink) !important;
+            background: rgba(255, 0, 85, 0.25) !important;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.5) !important;
+        }
+
+        .opt-btn.falsa-pista-recommended::after {
+            content: '🔥 CONSIGLIATO';
+            position: absolute;
+            top: -9px;
+            right: 6px;
+            background: var(--neon-orange);
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 1px 6px;
+            border-radius: 4px;
+            box-shadow: 0 0 8px var(--neon-orange);
+        }
+
+        /* INGANNI HORIZONTAL SCROLL MENU */
+        .inganni-wrapper {
+            background: rgba(7, 9, 19, 0.7);
+            border: 1px solid rgba(157, 0, 255, 0.3);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        .inganni-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            color: var(--neon-purple);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .inganni-scroll-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .inganni-scroll-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .inganni-scroll-container::-webkit-scrollbar-thumb {
+            background: var(--neon-purple);
+            border-radius: 4px;
+        }
+
+        .inganno-card {
+            flex: 0 0 135px;
+            background: rgba(22, 27, 61, 0.9);
+            border: 1px solid rgba(157, 0, 255, 0.4);
+            border-radius: var(--radius-md);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .inganno-card:hover {
+            border-color: var(--neon-cyan);
+            transform: translateY(-2px);
+        }
+
+        .inganno-card.selected {
+            border-color: var(--neon-green) !important;
+            background: rgba(0, 255, 102, 0.15) !important;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.4) !important;
+        }
+
+        .inganno-card.disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        .inganno-card-top {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .inganno-icon {
+            font-size: 1.2rem;
+        }
+
+        .inganno-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .inganno-cost {
+            font-size: 0.7rem;
+            font-weight: 900;
+            color: var(--neon-yellow);
+            background: rgba(255, 230, 0, 0.15);
+            padding: 1px 5px;
+            border-radius: 4px;
+            align-self: flex-start;
+            margin-bottom: 4px;
+        }
+
+        .inganno-desc {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            line-height: 1.2;
+        }
+
+        /* TARGET SELECTOR DROPDOWN */
+        .target-select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+            background: rgba(13, 17, 39, 0.9);
+            border: 1px solid var(--neon-purple);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            outline: none;
+        }
+
+        /* LEADERBOARD & RESULTS LOG */
+        .leaderboard-list {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .player-row {
+            background: rgba(22, 27, 61, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .player-row.rank-1 {
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 12px rgba(255, 230, 0, 0.3);
+            background: rgba(255, 230, 0, 0.1);
+        }
+
+        .turn-log-box {
+            background: rgba(7, 9, 19, 0.8);
+            border: 1px solid rgba(255, 0, 85, 0.3);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            margin-top: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.78rem;
+            color: #ccc;
+        }
+
+        .turn-log-item {
+            margin-bottom: 4px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            line-height: 1.3;
+        }
+
+        .turn-log-item b {
+            color: var(--neon-cyan);
+        }
+    </style>
+</head><body>
+
+    <div id="app">
+        <!-- LOBBY SCREEN -->
+        <div id="screen-lobby">
+            <h1 class="cyber-title">TRIVIA CHAOS</h1>
+            <p class="cyber-subtitle">2.0 MULTIPLAYER CYBER EDITION</p>
+
+            <div style="margin: 25px 0;">
+                <input type="text" id="player-name" class="cyber-input" placeholder="IL TUO NICKNAME" maxlength="12">
+
+                <div style="margin-top: 20px;">
+                    <button class="btn-cyber" onclick="createRoom()">🎮 CREA STANZA (HOST)</button>
+                    <div style="text-align: center; margin: 12px 0; color: var(--text-muted); font-weight: 700;">- OPPURE -</div>
+                    <input type="text" id="room-code-input" class="cyber-input" placeholder="CODICE STANZA (4 LETTERE)" style="text-transform: uppercase;">
+                    <button class="btn-cyber secondary" onclick="joinRoom()">⚡ ENTRA IN STANZA</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- WAITING LOBBY SCREEN -->
+        <div id="screen-waiting" class="hidden">
+            <h2 class="cyber-title" style="font-size: 1.4rem;">STANZA: <span id="display-room-code" style="color: var(--neon-pink);">----</span></h2>
+            <p class="cyber-subtitle">IN ATTESA DEGLI ALTRI GIOCATORI...</p>
+            
+            <div id="players-list" class="leaderboard-list"></div>
+
+            <button id="start-btn" class="btn-cyber hidden" onclick="startGame()" style="margin-top: 20px;">🚀 AVVIA PARTITA</button>
+        </div>
+
+        <!-- GAMEPLAY SCREEN -->
+        <div id="screen-game" class="hidden">
+            <!-- LIVE STATUS EFFECTS OVERLAY BADGES -->
+            <div id="status-bar" class="status-bar"></div>
+
+            <div class="game-stats">
+                <span>TURNO <b id="round-num" style="color: var(--neon-cyan);">1</b>/<span id="total-rounds">10</span></span>
+                <span id="category-badge" class="category-badge">CATEGORIA</span>
+                <span>PUNTI: <b id="my-score" style="color: var(--neon-green);">300</b></span>
+            </div>
+
+            <div class="timer-container">
+                <div id="timer" class="timer-fill"></div>
+            </div>
+
+            <div class="question-card">
+                <div id="question-text" class="question-text">Caricamento domanda in corso...</div>
+                <img id="question-image" class="question-image hidden" src="" alt="Immagine Domanda">
+            </div>
+
+            <div class="options-grid" id="options-grid">
+                <button class="opt-btn" onclick="selectAnswer(0)" id="opt-0"><span class="no-flip">A</span></button>
+                <button class="opt-btn" onclick="selectAnswer(1)" id="opt-1"><span class="no-flip">B</span></button>
+                <button class="opt-btn" onclick="selectAnswer(2)" id="opt-2"><span class="no-flip">C</span></button>
+                <button class="opt-btn" onclick="selectAnswer(3)" id="opt-3"><span class="no-flip">D</span></button>
+            </div>
+
+            <!-- INGANNI SCROLLABLE SELECTION -->
+            <div class="inganni-wrapper">
+                <div class="inganni-header">
+                    <span>⚡ LANCIA UN INGANNO (1 PER TURNO)</span>
+                    <span id="inganno-selected-label" style="color: var(--neon-green);">NESSUNO</span>
+                </div>
+                <div class="inganni-scroll-container" id="inganni-list"></div>
+                
+                <select id="target-player" class="target-select">
+                    <option value="">🎯 Seleziona Bersaglio...</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="screen-results" class="hidden">
+            <h2 class="cyber-title" style="font-size: 1.5rem;">RISULTATI TURNO</h2>
+            <p class="cyber-subtitle" id="result-round-subtitle">CLASSIFICA GENERALE</p>
+            
+            <div class="leaderboard-list" id="leaderboard"></div>
+
+            <div class="turn-log-box" id="turn-log-box">
+                <div style="font-weight: 700; color: var(--neon-pink); margin-bottom: 5px;">📜 DECODIFICA INGANNI & EVENTI:</div>
+                <div id="turn-log-content"></div>
+            </div>
+
+            <button onclick="nextRound()" id="next-btn" class="btn-cyber hidden" style="margin-top: 15px;">PROSSIMO TURNO ⏩</button>
+        </div>
+    </div>
+    <script>
+        // CONFIGURAZIONE DEGLI INGANNI (10 TOTALI)
+        const INGANNI_DATA = [
+            { id: 'Silenzia', icon: '🚫', cost: 120, name: 'Silenzia', desc: 'Impedisce al bersaglio di rispondere (0 pt)' },
+            { id: 'Sotto Sopra', icon: '🔄', cost: 150, name: 'Sotto Sopra', desc: 'Inverte esito risposta (Giusta <-> Sbagliata)' },
+            { id: 'Scudo', icon: '🛡️', cost: 100, name: 'Scudo', desc: 'Immune a tutti gli Inganni subiti nel turno' },
+            { id: 'Riflesso', icon: '🪞', cost: 150, name: 'Riflesso', desc: 'Rispedisce Inganno subito al mittente' },
+            { id: 'Scommessa Buia', icon: '🎲', cost: 100, name: 'Scommessa Buia', desc: 'Scommetti su errore: +300pt se sbaglia, -150pt se azzecca' },
+            { id: 'Anarchia', icon: '🌀', cost: 100, name: 'Anarchia', desc: 'Mescola pulsanti del bersaglio ogni 2 secondi' },
+            { id: 'Destino Condiviso', icon: '🔗', cost: 150, name: 'Destino Condiviso', desc: 'Se sbagli risposta, il bersaglio perde i tuoi stessi pt' },
+            { id: 'Tassa di Soggiorno', icon: '🪙', cost: 200, name: 'Tassa di Soggiorno', desc: 'Ruba 50 pt a tutti i giocatori che rispondono bene' },
+            { id: 'Falsa Pista', icon: '🎭', cost: 120, name: 'Falsa Pista', desc: 'Consiglia visivamente risposta SBAGLIATA al bersaglio' },
+            { id: 'Patto Sporco', icon: '🤝', cost: 100, name: 'Patto Sporco', desc: 'Rubi 100 pt se azzecca. Perdi 200 pt se sbaglia' }
+        ];
+
+        // STATO DEL GIOCO & NETWORKING
+        let peer = null;
+        let connections = [];
+        let hostConn = null;
+        let isHost = false;
+        let roomCode = '';
+        let myName = '';
+        let myScore = 300;
+        let selectedAnswer = null;
+        let usedInganno = null;
+        let targetPlayerId = null;
+        let timerInterval = null;
+        let anarchyInterval = null;
+
+        let questions = [];
+        let currentRound = 0;
+        let players = [];
+        let currentQuestion = null;
+        let activeLiveEffects = [];
+
+        const peerConfig = {
+            config: {
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:stun1.l.google.com:19302' },
+                    { urls: 'stun:stun2.l.google.com:19302' }
+                ]
+            }
+        };
+
+        // INIZIALIZZAZIONE & FETCH QUESTIONS
+        window.addEventListener('DOMContentLoaded', () => {
+            renderInganniMenu();
+            loadQuestions();
+        });
+
+        async function loadQuestions() {
+            try {
+                const res = await fetch('questions.json');
+                if (!res.ok) throw new Error('HTTP status ' + res.status);
+                questions = await res.json();
+                console.log('Domande caricate con successo da questions.json:', questions.length);
+            } catch (err) {
+                console.warn('Fallback domande integrate attivo per errore fetch:', err);
+                questions = [
+                    { id: 1, category: '🌍 Geografia', q: 'Qual è la capitale della Spagna?', a: ['Barcellona', 'Siviglia', 'Madrid', 'Valencia'], correct: 2, timeLimit: 15, image: null },
+                    { id: 2, category: '🔬 Scienza', q: 'Quanti pianeti ci sono nel Sistema Solare?', a: ['7', '9', '10', '8'], correct: 3, timeLimit: 15, image: null },
+                    { id: 3, category: '🎨 Arte', q: 'Chi ha dipinto la Cappella Sistina?', a: ['Leonardo da Vinci', 'Raffaello', 'Michelangelo', 'Donatello'], correct: 2, timeLimit: 20, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/800px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg' },
+                    { id: 4, category: '🎬 Cinema', q: 'In quale anno uscì il primo film di Star Wars?', a: ['1975', '1980', '1977', '1982'], correct: 2, timeLimit: 15, image: null },
+                    { id: 5, category: '🏆 Sport', q: 'In quale città si sono tenute le Olimpiadi del 2020?', a: ['Parigi', 'Sydney', 'Pechino', 'Tokyo'], correct: 3, timeLimit: 15, image: null }
+                ];
+            }
+        }
+
+        // SCROLLABLE INGANNI MENU RENDERING
+        function renderInganniMenu() {
+            const container = document.getElementById('inganni-list');
+            container.innerHTML = '';
+
+            INGANNI_DATA.forEach(ing => {
+                const card = document.createElement('div');
+                card.className = `inganno-card ${myScore < ing.cost ? 'disabled' : ''}`;
+                card.id = `ing-card-${ing.id.replace(/\s+/g, '-')}`;
+                card.onclick = () => selectInganno(ing);
+
+                card.innerHTML = `
+                    <div class="inganno-card-top">
+                        <span class="inganno-icon">${ing.icon}</span>
+                        <span class="inganno-title">${ing.name}</span>
+                    </div>
+                    <div class="inganno-cost">${ing.cost} PT</div>
+                    <div class="inganno-desc">${ing.desc}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateInganniAffordability() {
+            INGANNI_DATA.forEach(ing => {
+                const el = document.getElementById(`ing-card-${ing.id.replace(/\s+/g, '-')}`);
+                if (el) {
+                    if (myScore < ing.cost && !el.classList.contains('selected')) {
+                        el.classList.add('disabled');
+                    } else {
+                        el.classList.remove('disabled');
+                    }
+                }
+            });
+        }
+
+        function selectInganno(ing) {
+            if (myScore < ing.cost) {
+                alert(`Punti insufficienti per ${ing.name}! Ti servono ${ing.cost} pt.`);
+                return;
+            }
+
+            // Deselect if clicking already selected
+            if (usedInganno && usedInganno.id === ing.id) {
+                usedInganno = null;
+                document.querySelectorAll('.inganno-card').forEach(c => c.classList.remove('selected'));
+                document.getElementById('inganno-selected-label').innerText = 'NESSUNO';
+                updateInganniAffordability();
+                return;
+            }
+
+            usedInganno = ing;
+            document.querySelectorAll('.inganno-card').forEach(c => c.classList.remove('selected'));
+            const cardEl = document.getElementById(`ing-card-${ing.id.replace(/\s+/g, '-')}`);
+            if (cardEl) cardEl.classList.add('selected');
+            document.getElementById('inganno-selected-label').innerText = `${ing.icon} ${ing.name}`;
+
+            // Notify real-time if live visual inganno cast
+            broadcastLiveIngannoCast();
+        }
+
+        // P2P PEERJS NETWORKING
+        function createRoom() {
+            myName = document.getElementById('player-name').value.trim() || 'Host Cyber';
+            roomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
+            isHost = true;
+
+            peer = new Peer('TRIVIA-' + roomCode, peerConfig);
+
+            peer.on('open', (id) => {
+                showScreen('screen-waiting');
+                document.getElementById('display-room-code').innerText = roomCode;
+                document.getElementById('start-btn').classList.remove('hidden');
+                players.push({ id: peer.id, name: myName, score: 300, answer: null, inganno: null, target: null });
+                updatePlayersList();
+            });
+
+            peer.on('connection', (conn) => {
+                conn.on('open', () => {
+                    let idx = connections.findIndex(c => c.peer === conn.peer);
+                    if (idx !== -1) connections[idx] = conn;
+                    else connections.push(conn);
+                });
+                conn.on('data', (data) => handleHostMessage(data, conn));
+            });
+
+            peer.on('error', (err) => alert("Errore PeerJS Host: " + err.type));
+        }
+
+        function joinRoom() {
+            myName = document.getElementById('player-name').value.trim() || 'Giocatore';
+            roomCode = document.getElementById('room-code-input').value.trim().toUpperCase();
+
+            if (!roomCode) { alert("Inserisci il codice stanza!"); return; }
+
+            peer = new Peer(peerConfig);
+
+            peer.on('open', (id) => {
+                hostConn = peer.connect('TRIVIA-' + roomCode, { reliable: true });
+
+                hostConn.on('open', () => {
+                    hostConn.send({ type: 'JOIN', name: myName, id: peer.id });
+                    showScreen('screen-waiting');
+                    document.getElementById('display-room-code').innerText = roomCode;
+                });
+
+                hostConn.on('data', (data) => handleClientMessage(data));
+
+                setTimeout(() => {
+                    if (!hostConn || !hostConn.open) alert("Impossibile connettersi all'Host. Verifica il codice!");
+                }, 6000);
+            });
+
+            peer.on('error', (err) => alert("Errore Connessione Client: " + err.type));
+        }
+
+        function broadcast(data) {
+            connections.forEach(c => {
+                try { if (c && c.open) c.send(data); } catch (e) { console.error("Broadcast Error: ", e); }
+            });
+        }
+        function handleHostMessage(data, conn) {
+            if (data.type === 'JOIN') {
+                let existing = players.find(p => p.id === data.id);
+                if (!existing) players.push({ id: data.id, name: data.name, score: 300, answer: null, inganno: null, target: null });
+                else existing.name = data.name;
+                broadcast({ type: 'PLAYER_LIST', players: players });
+                updatePlayersList();
+            }
+            if (data.type === 'LIVE_INGANNO') {
+                broadcast(data); // relay to all clients
+                applyLiveIngannoEffect(data);
+            }
+            if (data.type === 'SUBMIT_ACTION') {
+                let p = players.find(x => x.id === data.id);
+                if (p) {
+                    p.answer = data.answer;
+                    p.inganno = data.inganno;
+                    p.target = data.target;
+                }
+            }
+        }
+
+        function handleClientMessage(data) {
+            if (data.type === 'PLAYER_LIST') {
+                players = data.players;
+                updatePlayersList();
+            }
+            if (data.type === 'START_ROUND') {
+                startRoundClient(data.round, data.totalRounds, data.question);
+            }
+            if (data.type === 'LIVE_INGANNO') {
+                applyLiveIngannoEffect(data);
+            }
+            if (data.type === 'ROUND_RESULTS') {
+                showResults(data.players, data.turnLogs);
+            }
+        }
+
+        function broadcastLiveIngannoCast() {
+            targetPlayerId = document.getElementById('target-player').value;
+            if (!usedInganno) return;
+
+            const payload = {
+                type: 'LIVE_INGANNO',
+                casterId: peer.id,
+                casterName: myName,
+                inganno: usedInganno,
+                targetId: targetPlayerId
+            };
+
+            if (isHost) handleHostMessage(payload, null);
+            else if (hostConn && hostConn.open) hostConn.send(payload);
+        }
+
+        function applyLiveIngannoEffect(data) {
+            // Check if current user is the target
+            if (data.targetId === peer.id || (data.inganno.id === 'Tassa di Soggiorno' && data.casterId !== peer.id)) {
+                activeLiveEffects.push(data);
+                renderActiveEffectsVisuals();
+            }
+        }
+
+        function renderActiveEffectsVisuals() {
+            const app = document.getElementById('app');
+            const statusBar = document.getElementById('status-bar');
+            statusBar.innerHTML = '';
+
+            let isSilenced = false;
+            let isSottoSopra = false;
+            let isAnarchia = false;
+            let isFalsaPista = false;
+
+            activeLiveEffects.forEach(eff => {
+                const ingName = eff.inganno.id;
+                if (ingName === 'Silenzia') isSilenced = true;
+                if (ingName === 'Sotto Sopra') isSottoSopra = true;
+                if (ingName === 'Anarchia') isAnarchia = true;
+                if (ingName === 'Falsa Pista') isFalsaPista = true;
+
+                const badge = document.createElement('span');
+                badge.className = `status-badge badge-${ingName.toLowerCase().replace(/\s+/g, '-')}`;
+                badge.innerText = `${eff.inganno.icon} ${eff.inganno.name} DA ${eff.casterName}`;
+                statusBar.appendChild(badge);
+            });
+
+            // UI Modifications based on effects
+            app.classList.toggle('effect-silenzia', isSilenced);
+            app.classList.toggle('effect-sotto-sopra', isSottoSopra);
+            app.classList.toggle('effect-anarchia', isAnarchia);
+
+            if (isSilenced) {
+                document.querySelectorAll('.opt-btn').forEach(btn => btn.disabled = true);
+            }
+
+            if (isAnarchia && !anarchyInterval) {
+                anarchyInterval = setInterval(shuffleOptionsButtons, 2000);
+            }
+
+            if (isFalsaPista && currentQuestion) {
+                // Highlight a wrong answer option
+                const wrongIndices = [];
+                for (let i = 0; i < 4; i++) {
+                    if (i !== currentQuestion.correct) wrongIndices.push(i);
+                }
+                const fakeIndex = wrongIndices[Math.floor(Math.random() * wrongIndices.length)];
+                const fakeBtn = document.getElementById(`opt-${fakeIndex}`);
+                if (fakeBtn) fakeBtn.classList.add('falsa-pista-recommended');
+            }
+        }
+
+        function shuffleOptionsButtons() {
+            const grid = document.getElementById('options-grid');
+            for (let i = grid.children.length; i >= 0; i--) {
+                grid.appendChild(grid.children[Math.random() * i | 0]);
+            }
+        }
+
+        // SCREEN MANAGEMENT
+        function showScreen(id) {
+            document.querySelectorAll('#app > div').forEach(div => div.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function updatePlayersList() {
+            const list = document.getElementById('players-list');
+            const targetSelect = document.getElementById('target-player');
+            list.innerHTML = '';
+            targetSelect.innerHTML = '<option value="">🎯 Seleziona Bersaglio...</option>';
+
+            players.forEach(p => {
+                const meTag = p.id === peer.id ? ' (TU)' : '';
+                list.innerHTML += `<div class="player-row"><span>${p.name}${meTag}</span><b style="color: var(--neon-green);">${p.score} PT</b></div>`;
+                if (p.id !== peer.id) {
+                    targetSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+                }
+            });
+
+            // Update myScore variable from players array if synced
+            const me = players.find(p => p.id === peer.id);
+            if (me) {
+                myScore = me.score;
+                document.getElementById('my-score').innerText = myScore;
+            }
+            updateInganniAffordability();
+        }
+
+        function startGame() {
+            if (!isHost) return;
+            currentRound = 0;
+            sendNextQuestion();
+        }
+
+        function sendNextQuestion() {
+            let q = questions[currentRound];
+            players.forEach(p => { p.answer = null; p.inganno = null; p.target = null; });
+            broadcast({ type: 'START_ROUND', round: currentRound + 1, totalRounds: questions.length, question: q });
+            startRoundClient(currentRound + 1, questions.length, q);
+        }
+
+        function startRoundClient(roundNum, totalRounds, question) {
+            currentQuestion = question;
+            selectedAnswer = null;
+            usedInganno = null;
+            targetPlayerId = null;
+            activeLiveEffects = [];
+
+            if (anarchyInterval) { clearInterval(anarchyInterval); anarchyInterval = null; }
+
+            // Reset App Effects styling
+            const app = document.getElementById('app');
+            app.className = '';
+            document.getElementById('status-bar').innerHTML = '';
+            document.getElementById('inganno-selected-label').innerText = 'NESSUNO';
+            document.querySelectorAll('.inganno-card').forEach(c => c.classList.remove('selected'));
+
+            showScreen('screen-game');
+            document.getElementById('round-num').innerText = roundNum;
+            document.getElementById('total-rounds').innerText = totalRounds;
+            document.getElementById('category-badge').innerText = question.category || 'VARIETÀ';
+            document.getElementById('question-text').innerText = question.q;
+
+            // Handle Question Image
+            const imgEl = document.getElementById('question-image');
+            if (question.image) {
+                imgEl.src = question.image;
+                imgEl.classList.remove('hidden');
+            } else {
+                imgEl.src = '';
+                imgEl.classList.add('hidden');
+            }
+
+            // Options buttons reset
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.id = `opt-${i}`;
+                btn.onclick = () => selectAnswer(i);
+                btn.innerHTML = `<span class="no-flip">${question.a[i]}</span>`;
+                grid.appendChild(btn);
+            }
+
+            updateInganniAffordability();
+
+            // Timer Initialization
+            const limit = question.timeLimit || 15;
+            let timeLeft = limit;
+            const timerFill = document.getElementById('timer');
+            timerFill.style.width = '100%';
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerFill.style.width = (timeLeft / limit * 100) + '%';
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTurnAction();
+                    if (isHost) setTimeout(resolveTurn, 1200);
+                }
+            }, 1000);
+        }
+
+        function selectAnswer(index) {
+            // Ignore if silenced
+            if (document.getElementById('app').classList.contains('effect-silenzia')) return;
+
+            selectedAnswer = index;
+            document.querySelectorAll('.opt-btn').forEach((btn, i) => {
+                btn.classList.toggle('selected', i === index);
+            });
+        }
+
+        function submitTurnAction() {
+            targetPlayerId = document.getElementById('target-player').value || null;
+            const payload = {
+                type: 'SUBMIT_ACTION',
+                id: peer.id,
+                answer: selectedAnswer,
+                inganno: usedInganno,
+                target: targetPlayerId
+            };
+
+            if (isHost) handleHostMessage(payload, null);
+            else if (hostConn && hostConn.open) hostConn.send(payload);
+        }
+        // MATRICE DI RISOLUZIONE DEL TURNO (`resolveTurn`)
+        function resolveTurn() {
+            const q = questions[currentRound];
+            const turnLogs = [];
+
+            // -------------------------------------------------------------
+            // FASE 1: Protezioni (Scudo e Riflesso risolvono/deviano i bersagli)
+            // -------------------------------------------------------------
+            const resolvedActions = players.map(p => {
+                return {
+                    player: p,
+                    inganno: p.inganno,
+                    targetId: p.target,
+                    finalTargetId: p.target,
+                    isBlocked: false,
+                    isReflected: false
+                };
+            });
+
+            resolvedActions.forEach(act => {
+                if (!act.inganno || !act.targetId) return;
+
+                const targetAct = resolvedActions.find(a => a.player.id === act.targetId);
+
+                // Riflesso Check
+                if (targetAct && targetAct.inganno && targetAct.inganno.id === 'Riflesso' && act.inganno.id !== 'Scudo' && act.inganno.id !== 'Riflesso') {
+                    act.finalTargetId = act.player.id;
+                    act.isReflected = true;
+                    turnLogs.push(`🪞 <b>${targetAct.player.name}</b> ha RIFLETTATO ${act.inganno.name} a <b>${act.player.name}</b>!`);
+                }
+
+                // Scudo Check
+                const finalTargetAct = resolvedActions.find(a => a.player.id === act.finalTargetId);
+                if (finalTargetAct && finalTargetAct.inganno && finalTargetAct.inganno.id === 'Scudo') {
+                    act.isBlocked = true;
+                    turnLogs.push(`🛡️ <b>${finalTargetAct.player.name}</b> ha BLOCCATO ${act.inganno.name} di <b>${act.player.name}</b> con lo Scudo!`);
+                }
+            });
+
+            // Filter active non-blocked inganni
+            const activeInganni = resolvedActions.filter(a => a.inganno && !a.isBlocked && a.finalTargetId);
+
+            // -------------------------------------------------------------
+            // FASE 2: Debuff Input & Visivi (Silenzia, Anarchia, Falsa Pista)
+            // -------------------------------------------------------------
+            const silencedPlayers = new Set();
+            activeInganni.forEach(a => {
+                if (a.inganno.id === 'Silenzia') {
+                    silencedPlayers.add(a.finalTargetId);
+                    const targetP = players.find(x => x.id === a.finalTargetId);
+                    turnLogs.push(`🚫 <b>${targetP ? targetP.name : 'Giocatore'}</b> è stato SILENZIATO da <b>${a.player.name}</b>!`);
+                }
+            });
+
+            // -------------------------------------------------------------
+            // FASE 3: Modificatori d'Esito (Base -> Sotto Sopra e Destino Condiviso)
+            // -------------------------------------------------------------
+            const playerOutcomes = {};
+
+            players.forEach(p => {
+                let baseCorrect = (p.answer !== null && p.answer === q.correct);
+                let isSilenced = silencedPlayers.has(p.id);
+
+                if (isSilenced) {
+                    baseCorrect = false;
+                }
+
+                // Sotto Sopra check
+                let hasSottoSopra = activeInganni.some(a => a.finalTargetId === p.id && a.inganno.id === 'Sotto Sopra');
+                let finalCorrect = baseCorrect;
+
+                if (hasSottoSopra) {
+                    finalCorrect = !baseCorrect;
+                    turnLogs.push(`🔄 SOTTO SOPRA ha invertito l'esito della risposta di <b>${p.name}</b>!`);
+                }
+
+                let basePointsGained = 0;
+                if (isSilenced) {
+                    basePointsGained = 0;
+                } else if (finalCorrect) {
+                    basePointsGained = 200;
+                } else if (p.answer !== null) {
+                    basePointsGained = -100;
+                }
+
+                playerOutcomes[p.id] = {
+                    baseCorrect,
+                    finalCorrect,
+                    basePointsGained,
+                    netChange: basePointsGained
+                };
+            });
+
+            // Destino Condiviso check
+            activeInganni.forEach(a => {
+                if (a.inganno.id === 'Destino Condiviso') {
+                    const casterOutcome = playerOutcomes[a.player.id];
+                    if (casterOutcome && !casterOutcome.finalCorrect) {
+                        const targetP = players.find(x => x.id === a.finalTargetId);
+                        const penalty = Math.abs(casterOutcome.basePointsGained);
+                        if (targetP && penalty > 0) {
+                            playerOutcomes[a.finalTargetId].netChange -= penalty;
+                            turnLogs.push(`🔗 DESTINO CONDIVISO: <b>${a.player.name}</b> ha sbagliato! <b>${targetP.name}</b> perde ${penalty} pt!`);
+                        }
+                    }
+                }
+            });
+
+            // -------------------------------------------------------------
+            // FASE 4: Trasferimenti Punti & Scommesse (Patto, Scommessa, Tassa)
+            // -------------------------------------------------------------
+            activeInganni.forEach(a => {
+                const targetP = players.find(x => x.id === a.finalTargetId);
+                const targetOutcome = playerOutcomes[a.finalTargetId];
+
+                if (a.inganno.id === 'Patto Sporco' && targetOutcome) {
+                    if (targetOutcome.finalCorrect) {
+                        playerOutcomes[a.player.id].netChange += 100;
+                        playerOutcomes[a.finalTargetId].netChange -= 100;
+                        turnLogs.push(`🤝 PATTO SPORCO: <b>${a.player.name}</b> ruba 100 pt a <b>${targetP.name}</b>!`);
+                    } else {
+                        playerOutcomes[a.player.id].netChange -= 200;
+                        turnLogs.push(`🤝 PATTO SPORCO FALLITO: <b>${a.player.name}</b> perde 200 pt!`);
+                    }
+                }
+
+                if (a.inganno.id === 'Scommessa Buia' && targetOutcome) {
+                    if (!targetOutcome.finalCorrect) {
+                        playerOutcomes[a.player.id].netChange += 300;
+                        turnLogs.push(`🎲 SCOMMESSA BUIA VINTE! <b>${a.player.name}</b> guadagna +300 pt!`);
+                    } else {
+                        playerOutcomes[a.player.id].netChange -= 150;
+                        turnLogs.push(`🎲 SCOMMESSA BUIA PERSE: <b>${a.player.name}</b> perde -150 pt!`);
+                    }
+                }
+
+                if (a.inganno.id === 'Tassa di Soggiorno') {
+                    let stolenTotal = 0;
+                    players.forEach(p => {
+                        if (p.id !== a.player.id && playerOutcomes[p.id].finalCorrect) {
+                            playerOutcomes[p.id].netChange -= 50;
+                            stolenTotal += 50;
+                        }
+                    });
+                    if (stolenTotal > 0) {
+                        playerOutcomes[a.player.id].netChange += stolenTotal;
+                        turnLogs.push(`🪙 TASSA DI SOGGIORNO: <b>${a.player.name}</b> riscuote ${stolenTotal} pt totali!`);
+                    }
+                }
+            });
+
+            // Deduct cost for used inganni & apply final score changes
+            players.forEach(p => {
+                if (p.inganno) {
+                    p.score -= p.inganno.cost;
+                }
+                p.score += playerOutcomes[p.id].netChange;
+            });
+
+            broadcast({ type: 'ROUND_RESULTS', players: players, turnLogs: turnLogs });
+            showResults(players, turnLogs);
+        }
+
+        // SHOW RESULTS SCREEN
+        function showResults(updatedPlayers, turnLogs) {
+            showScreen('screen-results');
+            const lb = document.getElementById('leaderboard');
+            lb.innerHTML = '';
+
+            updatedPlayers.sort((a, b) => b.score - a.score).forEach((p, idx) => {
+                const meTag = p.id === peer.id ? ' (TU)' : '';
+                const rankClass = idx === 0 ? 'rank-1' : '';
+                lb.innerHTML += `<div class="player-row ${rankClass}"><span>#${idx + 1} ${p.name}${meTag}</span><b style="color: var(--neon-cyan);">${p.score} PT</b></div>`;
+            });
+
+            const logContent = document.getElementById('turn-log-content');
+            logContent.innerHTML = '';
+            if (turnLogs && turnLogs.length > 0) {
+                turnLogs.forEach(log => {
+                    logContent.innerHTML += `<div class="turn-log-item">${log}</div>`;
+                });
+            } else {
+                logContent.innerHTML = '<div class="turn-log-item">Nessun inganno o evento speciale questo turno.</div>';
+            }
+
+            if (isHost) {
+                const nextBtn = document.getElementById('next-btn');
+                nextBtn.classList.remove('hidden');
+            }
+        }
+
+        function nextRound() {
+            currentRound++;
+            if (currentRound < questions.length) {
+                sendNextQuestion();
+            } else {
+                alert('🏆 PARTITA COMPLETATA! Ricarica per una nuova sfida.');
+            }
+        }
+    </script>
+</body>
+
+</html>

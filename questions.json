@@ -1,181 +1,181 @@
 [
   {
     "id": 1,
-    "category": "Geo",
-    "q": "Qual è la capitale della Spagna?",
+    "category": "🎮 Videogiochi",
+    "q": "Qual è il videogioco più venduto di tutti i tempi?",
     "a": [
-      "Barcellona",
-      "Siviglia",
-      "Madrid",
-      "Valencia"
+      "Tetris",
+      "Minecraft",
+      "Grand Theft Auto V",
+      "Wii Sports"
     ],
-    "correct": 2,
+    "correct": 1,
     "timeLimit": 15,
-    "image": null
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Minecraft_cover.jpg/600px-Minecraft_cover.jpg"
   },
   {
     "id": 2,
-    "category": "Scienza",
-    "q": "Quanti pianeti ci sono nel Sistema Solare?",
+    "category": "🎮 Videogiochi",
+    "q": "Chi è il principale antagonista nella serie di Super Mario?",
     "a": [
-      "7",
-      "9",
-      "10",
-      "8"
+      "Wario",
+      "Walugi",
+      "Bowser",
+      "Donkey Kong"
     ],
-    "correct": 3,
-    "timeLimit": 15,
+    "correct": 2,
+    "timeLimit": 12,
     "image": null
   },
   {
     "id": 3,
-    "category": "Arte",
-    "q": "Chi ha dipinto la Cappella Sistina?",
+    "category": "🎮 Videogiochi",
+    "q": "In quale anno è stato pubblicato il primo gioco di Pokémon (Rosso e Blu in JP)?",
     "a": [
-      "Leonardo da Vinci",
-      "Raffaello",
-      "Michelangelo",
-      "Donatello"
+      "1994",
+      "1996",
+      "1998",
+      "2000"
     ],
-    "correct": 2,
-    "timeLimit": 20,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/800px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg"
+    "correct": 1,
+    "timeLimit": 15,
+    "image": null
   },
   {
     "id": 4,
-    "category": "Cinema",
-    "q": "In quale anno uscì il primo film di Star Wars?",
+    "category": "🎮 Videogiochi",
+    "q": "Come si chiama la protagonista della serie Tomb Raider?",
     "a": [
-      "1975",
-      "1980",
-      "1977",
-      "1982"
+      "Jill Valentine",
+      "Lara Croft",
+      "Bayonetta",
+      "Samus Aran"
     ],
-    "correct": 2,
-    "timeLimit": 15,
-    "image": null
-  },
-  {
-    "id": 5,
-    "category": "Sport",
-    "q": "In quale città si sono tenute le Olimpiadi del 2020?",
-    "a": [
-      "Parigi",
-      "Sydney",
-      "Pechino",
-      "Tokyo"
-    ],
-    "correct": 3,
-    "timeLimit": 15,
-    "image": null
-  },
-  {
-    "id": 6,
-    "category": "Scienza",
-    "q": "Qual è la formula chimica dell'acqua?",
-    "a": [
-      "H3O",
-      "CO2",
-      "H2O",
-      "O2"
-    ],
-    "correct": 2,
+    "correct": 1,
     "timeLimit": 10,
     "image": null
   },
   {
-    "id": 7,
-    "category": "Geo",
-    "q": "Qual è il paese più grande del mondo per superficie?",
+    "id": 5,
+    "category": "🎮 Videogiochi",
+    "q": "Quale azienda ha sviluppato Fortnite?",
     "a": [
-      "Canada",
-      "Russia",
-      "Cina",
-      "USA"
+      "Valve",
+      "Riot Games",
+      "Epic Games",
+      "Blizzard"
+    ],
+    "correct": 2,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 6,
+    "category": "⛩️ Anime & Manga",
+    "q": "Qual è l'obiettivo principale di Monkey D. Rufy in One Piece?",
+    "a": [
+      "Sconfiggere la Marina",
+      "Trovare il One Piece e diventare Re dei Pirati",
+      "Vendicare il fratello",
+      "Diventare uno Shichibukai"
     ],
     "correct": 1,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 7,
+    "category": "⛩️ Anime & Manga",
+    "q": "Chi è il creatore del celebre manga Dragon Ball?",
+    "a": [
+      "Eiichiro Oda",
+      "Masashi Kishimoto",
+      "Akira Toriyama",
+      "Tite Kubo"
+    ],
+    "correct": 2,
     "timeLimit": 15,
     "image": null
   },
   {
     "id": 8,
-    "category": "Storia",
-    "q": "In quale anno è caduto il Muro di Berlino?",
+    "category": "⛩️ Anime & Manga",
+    "q": "In Attack on Titan (L'Attacco dei Giganti), qual è il nome del protagonista?",
     "a": [
-      "1991",
-      "1985",
-      "1992",
-      "1989"
+      "Armin Arlert",
+      "Eren Yeager",
+      "Levi Ackerman",
+      "Erwin Smith"
     ],
-    "correct": 3,
-    "timeLimit": 20,
+    "correct": 1,
+    "timeLimit": 12,
     "image": null
   },
   {
     "id": 9,
-    "category": "Musica",
-    "q": "Chi è il cantante dei Queen?",
+    "category": "⛩️ Anime & Manga",
+    "q": "Quale tecnica segreta usa Naruto per creare copie fisiche di se stesso?",
     "a": [
-      "David Bowie",
-      "Freddie Mercury",
-      "Elton John",
-      "Mick Jagger"
+      "Rasengan",
+      "Chidori",
+      "Moltiplicazione Superiore del Corpo",
+      "Amaterasu"
     ],
-    "correct": 1,
-    "timeLimit": 10,
+    "correct": 2,
+    "timeLimit": 12,
     "image": null
   },
   {
     "id": 10,
-    "category": "Tech",
-    "q": "Chi ha fondato Microsoft?",
+    "category": "⛩️ Anime & Manga",
+    "q": "Quale Death Note apparteneva originariamente allo Shinigami Ryuk?",
     "a": [
-      "Steve Jobs",
-      "Elon Musk",
-      "Jeff Bezos",
-      "Bill Gates"
+      "Quello di Light Yagami",
+      "Quello di Misa Amane",
+      "Quello di Near",
+      "Quello di L"
     ],
-    "correct": 3,
+    "correct": 0,
     "timeLimit": 15,
     "image": null
   },
   {
     "id": 11,
-    "category": "Arte",
-    "q": "Chi ha dipinto La Notte Stellata?",
+    "category": "🎬 Cinema & TV",
+    "q": "Chi ha diretto il film Sci-Fi Inception e la trilogia del Cavaliere Oscuro?",
     "a": [
-      "Picasso",
-      "Monet",
-      "Van Gogh",
-      "Dalì"
+      "Steven Spielberg",
+      "Christopher Nolan",
+      "Quentin Tarantino",
+      "James Cameron"
     ],
-    "correct": 2,
-    "timeLimit": 15,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/800px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
-  },
-  {
-    "id": 12,
-    "category": "Scienza",
-    "q": "Qual è l'elemento chimico con simbolo Au?",
-    "a": [
-      "Argento",
-      "Alluminio",
-      "Oro",
-      "Rame"
-    ],
-    "correct": 2,
+    "correct": 1,
     "timeLimit": 15,
     "image": null
   },
   {
-    "id": 13,
-    "category": "Cinema",
-    "q": "Chi interpreta Tony Stark nei film Marvel?",
+    "id": 12,
+    "category": "🎬 Cinema & TV",
+    "q": "Quale metallo indistruttibile compone lo scudo di Captain America?",
     "a": [
-      "Chris Evans",
-      "Robert Downey Jr.",
-      "Chris Hemsworth",
-      "Mark Ruffalo"
+      "Adamantio",
+      "Vibranio",
+      "Titanio",
+      "Kryptonite"
+    ],
+    "correct": 1,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 13,
+    "category": "🎬 Cinema & TV",
+    "q": "Nella saga di Harry Potter, qual è il nome del gufo di Harry?",
+    "a": [
+      "Crosta",
+      "Edvige",
+      "Fufi",
+      "Grattastinchi"
     ],
     "correct": 1,
     "timeLimit": 10,
@@ -183,30 +183,520 @@
   },
   {
     "id": 14,
-    "category": "Geo",
-    "q": "Qual è il fiume più lungo del mondo?",
+    "category": "🎬 Cinema & TV",
+    "q": "In quale città immaginaria è ambientata la serie Stranger Things?",
     "a": [
-      "Nilo",
-      "Rio delle Amazzoni",
-      "Mississippi",
-      "Yangtze"
+      "Hawkins",
+      "Springfield",
+      "Riverdale",
+      "Sunnydale"
     ],
     "correct": 0,
-    "timeLimit": 20,
+    "timeLimit": 15,
     "image": null
   },
   {
     "id": 15,
-    "category": "Sport",
-    "q": "Quante squadre partecipano alla NBA?",
+    "category": "🎬 Cinema & TV",
+    "q": "Quale film ha vinto l'Oscar al miglior film nel 2020 ed è stato il primo film in lingua non inglese a riuscirci?",
     "a": [
-      "28",
-      "32",
-      "24",
-      "30"
+      "1917",
+      "Joker",
+      "Parasite",
+      "La La Land"
     ],
-    "correct": 3,
-    "timeLimit": 20,
+    "correct": 2,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 16,
+    "category": "💻 Tech & Cyber",
+    "q": "Cosa significa l'acronimo CPU in ambito informatico?",
+    "a": [
+      "Central Processing Unit",
+      "Computer Protection Unit",
+      "Core Power User",
+      "Control Protocol Unit"
+    ],
+    "correct": 0,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 17,
+    "category": "💻 Tech & Cyber",
+    "q": "Qual è il linguaggio di programmazione rappresentato da un serpente pitone?",
+    "a": [
+      "Java",
+      "C++",
+      "Python",
+      "Ruby"
+    ],
+    "correct": 2,
+    "timeLimit": 10,
+    "image": null
+  },
+  {
+    "id": 18,
+    "category": "💻 Tech & Cyber",
+    "q": "In quale anno è stato lanciato il primo iPhone da Steve Jobs?",
+    "a": [
+      "2005",
+      "2007",
+      "2009",
+      "2010"
+    ],
+    "correct": 1,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 19,
+    "category": "💻 Tech & Cyber",
+    "q": "Quale protocollo di rete garantisce una connessione web crittografata e sicura (lucchetto verde)?",
+    "a": [
+      "HTTP",
+      "HTTPS",
+      "FTP",
+      "SMTP"
+    ],
+    "correct": 1,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 20,
+    "category": "💻 Tech & Cyber",
+    "q": "Chi è l'ideatore e fondatore del sistema operativo Linux?",
+    "a": [
+      "Linus Torvalds",
+      "Bill Gates",
+      "Steve Wozniak",
+      "Guido van Rossum"
+    ],
+    "correct": 0,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 21,
+    "category": "🔬 Scienza & Spazio",
+    "q": "Qual è la velocità approssimativa della luce nel vuoto?",
+    "a": [
+      "300.000 km/s",
+      "150.000 km/s",
+      "1.000.000 km/s",
+      "30.000 km/s"
+    ],
+    "correct": 0,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 22,
+    "category": "🔬 Scienza & Spazio",
+    "q": "Qual è l'organo più grande del corpo umano?",
+    "a": [
+      "Fegato",
+      "Cervello",
+      "Pelle",
+      "Intestino"
+    ],
+    "correct": 2,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 23,
+    "category": "🔬 Scienza & Spazio",
+    "q": "Quale pianeta del Sistema Solare è noto come il Pianeta Rosso?",
+    "a": [
+      "Venere",
+      "Marte",
+      "Giove",
+      "Saturno"
+    ],
+    "correct": 1,
+    "timeLimit": 10,
+    "image": null
+  },
+  {
+    "id": 24,
+    "category": "🔬 Scienza & Spazio",
+    "q": "Qual è l'elemento più abbondante nell'universo conosciuto?",
+    "a": [
+      "Elio",
+      "Idrogeno",
+      "Ossigeno",
+      "Carbonio"
+    ],
+    "correct": 1,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 25,
+    "category": "🔬 Scienza & Spazio",
+    "q": "Chi ha formulato la Teoria della Relatività Ristretta e Generale?",
+    "a": [
+      "Isaac Newton",
+      "Nikola Tesla",
+      "Albert Einstein",
+      "Galileo Galilei"
+    ],
+    "correct": 2,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 26,
+    "category": "🌍 Geografia",
+    "q": "Qual è la capitale dell'Australia?",
+    "a": [
+      "Sydney",
+      "Melbourne",
+      "Canberra",
+      "Brisbane"
+    ],
+    "correct": 2,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 27,
+    "category": "🌍 Geografia",
+    "q": "In quale continente si trova il deserto del Sahara?",
+    "a": [
+      "Asia",
+      "Africa",
+      "America del Sud",
+      "Australia"
+    ],
+    "correct": 1,
+    "timeLimit": 10,
+    "image": null
+  },
+  {
+    "id": 28,
+    "category": "🌍 Geografia",
+    "q": "Qual è il lago più grande d'Italia?",
+    "a": [
+      "Lago di Como",
+      "Lago Maggiore",
+      "Lago di Garda",
+      "Lago Trasimeno"
+    ],
+    "correct": 2,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 29,
+    "category": "🌍 Geografia",
+    "q": "Quale stretto separa la Russia dall'Alaska (USA)?",
+    "a": [
+      "Stretto di Gibilterra",
+      "Stretto di Bering",
+      "Stretto di Magellano",
+      "Stretto del Bosforo"
+    ],
+    "correct": 1,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 30,
+    "category": "🌍 Geografia",
+    "q": "Qual è la capitale del Giappone?",
+    "a": [
+      "Kyoto",
+      "Osaka",
+      "Tokyo",
+      "Hiroshima"
+    ],
+    "correct": 2,
+    "timeLimit": 10,
+    "image": null
+  },
+  {
+    "id": 31,
+    "category": "📜 Storia",
+    "q": "In quale anno Cristoforo Colombo sbarcò nelle Americhe?",
+    "a": [
+      "1492",
+      "1488",
+      "1502",
+      "1510"
+    ],
+    "correct": 0,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 32,
+    "category": "📜 Storia",
+    "q": "Chi fu il primo imperatore di Roma?",
+    "a": [
+      "Giulio Cesare",
+      "Ottaviano Augusto",
+      "Nerone",
+      "Marco Aurelio"
+    ],
+    "correct": 1,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 33,
+    "category": "📜 Storia",
+    "q": "In quale città si verificò l'eruzione del Vesuvio del 79 d.C.?",
+    "a": [
+      "Roma",
+      "Pompei",
+      "Firenze",
+      "Siracusa"
+    ],
+    "correct": 1,
+    "timeLimit": 10,
+    "image": null
+  },
+  {
+    "id": 34,
+    "category": "📜 Storia",
+    "q": "Quale celebre muro venne abbattuto a Berlino nel novembre 1989?",
+    "a": [
+      "Muro di Berlino",
+      "Muro di Ginevra",
+      "Muro di Varsavia",
+      "Muro di Praga"
+    ],
+    "correct": 0,
+    "timeLimit": 10,
+    "image": null
+  },
+  {
+    "id": 35,
+    "category": "📜 Storia",
+    "q": "Chi condusse la spedizione dei Mille nel 1860 per l'Unità d'Italia?",
+    "a": [
+      "Camillo Benso di Cavour",
+      "Giuseppe Garibaldi",
+      "Giuseppe Mazzini",
+      "Vittorio Emanuele II"
+    ],
+    "correct": 1,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 36,
+    "category": "🎵 Musica",
+    "q": "Quale celebre rock band britannica ha inciso l'album The Dark Side of the Moon?",
+    "a": [
+      "The Beatles",
+      "Led Zeppelin",
+      "Pink Floyd",
+      "The Rolling Stones"
+    ],
+    "correct": 2,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 37,
+    "category": "🎵 Musica",
+    "q": "Chi è soprannominato il Re del Pop?",
+    "a": [
+      "Elvis Presley",
+      "Michael Jackson",
+      "Prince",
+      "George Michael"
+    ],
+    "correct": 1,
+    "timeLimit": 10,
+    "image": null
+  },
+  {
+    "id": 38,
+    "category": "🎵 Musica",
+    "q": "Quanti tasti bianchi e neri ha un pianoforte standard da concerto?",
+    "a": [
+      "76",
+      "88",
+      "92",
+      "64"
+    ],
+    "correct": 1,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 39,
+    "category": "🎵 Musica",
+    "q": "Quale compositore classico sordo scrisse la famosa Nona Sinfonia (Inno alla Gioia)?",
+    "a": [
+      "Mozart",
+      "Bach",
+      "Beethoven",
+      "Vivaldi"
+    ],
+    "correct": 2,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 40,
+    "category": "🎵 Musica",
+    "q": "Qual è la canzone con il maggior numero di riproduzioni della storia di Spotify?",
+    "a": [
+      "Shape of You - Ed Sheeran",
+      "Blinding Lights - The Weeknd",
+      "Despacito - Luis Fonsi",
+      "Dance Monkey - Tones and I"
+    ],
+    "correct": 1,
+    "timeLimit": 15,
+    "image": null
+  },
+  {
+    "id": 41,
+    "category": "🏆 Sport",
+    "q": "Chi ha vinto il Mondiale di Calcio FIFA 2022 in Qatar?",
+    "a": [
+      "Francia",
+      "Brasile",
+      "Argentina",
+      "Croazia"
+    ],
+    "correct": 2,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 42,
+    "category": "🏆 Sport",
+    "q": "Quanti anelli sono intrecciati nel simbolo ufficiale delle Olimpiadi?",
+    "a": [
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "correct": 1,
+    "timeLimit": 10,
+    "image": null
+  },
+  {
+    "id": 43,
+    "category": "🏆 Sport",
+    "q": "Chi detiene il record del mondo sui 100 metri piani con il tempo di 9,58 secondi?",
+    "a": [
+      "Carl Lewis",
+      "Usain Bolt",
+      "Tyson Gay",
+      "Yohan Blake"
+    ],
+    "correct": 1,
+    "timeLimit": 10,
+    "image": null
+  },
+  {
+    "id": 44,
+    "category": "🏆 Sport",
+    "q": "Quale tennista italiano ha vinto il torneo degli Australian Open 2024?",
+    "a": [
+      "Matteo Berrettini",
+      "Jannik Sinner",
+      "Fabio Fognini",
+      "Lorenzo Musetti"
+    ],
+    "correct": 1,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 45,
+    "category": "🏆 Sport",
+    "q": "Quanti punti vale una meta nel rugby a 15?",
+    "a": [
+      "3",
+      "5",
+      "6",
+      "7"
+    ],
+    "correct": 1,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 46,
+    "category": "🎨 Arte & Pop",
+    "q": "Dove è esposta la Gioconda (Monna Lisa) di Leonardo da Vinci?",
+    "a": [
+      "Galleria degli Uffizi (Firenze)",
+      "Museo del Louvre (Parigi)",
+      "British Museum (Londra)",
+      "Museo del Prado (Madrid)"
+    ],
+    "correct": 1,
+    "timeLimit": 12,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/600px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg"
+  },
+  {
+    "id": 47,
+    "category": "🎨 Arte & Pop",
+    "q": "Chi ha dipinto la famosa opera La Notte Stellata?",
+    "a": [
+      "Claude Monet",
+      "Pablo Picasso",
+      "Vincent van Gogh",
+      "Salvador Dalí"
+    ],
+    "correct": 2,
+    "timeLimit": 12,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/600px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+  },
+  {
+    "id": 48,
+    "category": "🎨 Arte & Pop",
+    "q": "Quale scultore e pittore rinascimentale ha scolpito il celebre David a Firenze?",
+    "a": [
+      "Michelangelo",
+      "Donatello",
+      "Bernini",
+      "Brunelleschi"
+    ],
+    "correct": 0,
+    "timeLimit": 12,
+    "image": null
+  },
+  {
+    "id": 49,
+    "category": "🎨 Arte & Pop",
+    "q": "Come si chiama il celebre festival della canzone italiana che si tiene in Liguria?",
+    "a": [
+      "Festival di Sanremo",
+      "Umbria Jazz",
+      "Festivalbar",
+      "Lucca Comics"
+    ],
+    "correct": 0,
+    "timeLimit": 10,
+    "image": null
+  },
+  {
+    "id": 50,
+    "category": "🎨 Arte & Pop",
+    "q": "Quale celebre statua gigante si trova sull'isola di Liberty Island a New York?",
+    "a": [
+      "Statua della Libertà",
+      "Cristo Redentore",
+      "Grande Sfinge",
+      "Colosso di Rodi"
+    ],
+    "correct": 0,
+    "timeLimit": 10,
     "image": null
   }
 ]

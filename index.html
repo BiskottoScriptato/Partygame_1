@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRIVIA CHAOS - Party Game</title>
-    <!-- PeerJS per Multiplayer P2P gratuito senza server backend -->
+    <!-- PeerJS per Multiplayer P2P senza server backend -->
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
         :root {
@@ -76,7 +76,7 @@
     <div id="screen-game" class="hidden">
         <div>
             <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #aaa;">
-                <span>Turno <span id="round-num">1</span>/5</span>
+                <span>Turno <span id="round-num">1</span>/3</span>
                 <span>Punti: <b id="my-score" style="color: var(--success);">300</b></span>
             </div>
             <div class="timer-bar"><div id="timer" class="timer-fill"></div></div>
@@ -97,7 +97,6 @@
                 <div class="inganno-card" onclick="castInganno('Silenzia', 120)">🚫 Silenzia (120pt)</div>
                 <div class="inganno-card" onclick="castInganno('Sotto Sopra', 150)">🔄 Sotto Sopra (150pt)</div>
                 <div class="inganno-card" onclick="castInganno('Scudo', 100)">🛡️ Scudo (100pt)</div>
-                <div class="inganno-card" onclick="castInganno('Scommessa', 100)">🎲 Scommessa (100pt)</div>
             </div>
             <select id="target-player" style="padding: 5px; font-size: 0.8rem; margin-top: 5px;">
                 <option value="">Seleziona Bersaglio...</option>
@@ -127,14 +126,13 @@
     let targetPlayerId = null;
     let timerInterval = null;
 
-    // Configurazione WebRTC con STUN Server gratuiti per reti 4G/5G
+    // Configurazione WebRTC con STUN Server ufficiali Google
     const peerConfig = {
         config: {
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' },
-                { urls: 'stun:stun2.l.google.com:19302' },
-                { urls: 'stun:stun3.l.google.com:19302' }
+                { urls: 'stun:stun2.l.google.com:19302' }
             ]
         }
     };
@@ -152,8 +150,6 @@
         roomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
         isHost = true;
 
-        alert("Creazione stanza in corso... Attendi 2 secondi.");
-
         peer = new Peer('TRIVIA-' + roomCode, peerConfig);
 
         peer.on('open', (id) => {
@@ -165,7 +161,15 @@
         });
 
         peer.on('connection', (conn) => {
-            connections.push(conn);
+            conn.on('open', () => {
+                let existingConnIndex = connections.findIndex(c => c.peer === conn.peer);
+                if (existingConnIndex !== -1) {
+                    connections[existingConnIndex] = conn;
+                } else {
+                    connections.push(conn);
+                }
+            });
+
             conn.on('data', (data) => handleHostMessage(data, conn));
         });
 
@@ -179,16 +183,14 @@
         roomCode = document.getElementById('room-code-input').value.trim().toUpperCase();
 
         if (!roomCode) {
-            alert("Inserisci il codice di 4 lettere!");
+            alert("Inserisci il codice stanza!");
             return;
         }
-
-        alert("Connessione alla stanza " + roomCode + " in corso...");
 
         peer = new Peer(peerConfig);
 
         peer.on('open', (id) => {
-            hostConn = peer.connect('TRIVIA-' + roomCode);
+            hostConn = peer.connect('TRIVIA-' + roomCode, { reliable: true });
 
             hostConn.on('open', () => {
                 hostConn.send({ type: 'JOIN', name: myName, id: peer.id });
@@ -198,25 +200,26 @@
 
             hostConn.on('data', (data) => handleClientMessage(data));
 
-            // Timeout se l'host non risponde entro 8 secondi
             setTimeout(() => {
                 if (!hostConn || !hostConn.open) {
-                    alert("Impossibile connettersi. Verifica che l'Host abbia già creato la stanza!");
+                    alert("Impossibile connettersi alla stanza. Verifica che l'Host sia online!");
                 }
-            }, 8000);
+            }, 6000);
         });
 
         peer.on('error', (err) => {
-            alert("Errore di connessione: " + err.type);
+            alert("Errore connessione: " + err.type);
         });
     }
 
     // MESSAGE HANDLING (HOST)
     function handleHostMessage(data, conn) {
         if (data.type === 'JOIN') {
-            // Evita duplicati
-            if (!players.some(p => p.id === data.id)) {
+            let existingPlayer = players.find(p => p.id === data.id);
+            if (!existingPlayer) {
                 players.push({ id: data.id, name: data.name, score: 300, answer: null, inganno: null, target: null });
+            } else {
+                existingPlayer.name = data.name;
             }
             broadcast({ type: 'PLAYER_LIST', players: players });
             updatePlayersList();
@@ -247,7 +250,11 @@
 
     function broadcast(data) {
         connections.forEach(c => {
-            if (c.open) c.send(data);
+            try {
+                if (c && c.open) c.send(data);
+            } catch (e) {
+                console.error("Errore invio broadcast: ", e);
+            }
         });
     }
 
@@ -329,7 +336,7 @@
         document.getElementById('my-score').innerText = myScore;
         usedInganno = { name: name, cost: cost };
         targetPlayerId = target;
-        alert(`Inganno ${name} attivato!`);
+        alert(`Inganno ${name} lanciato!`);
     }
 
     function submitTurnAction() {
@@ -396,3 +403,5 @@
         }
     }
 </script>
+</body>
+</html>

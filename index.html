@@ -127,21 +127,34 @@
     let targetPlayerId = null;
     let timerInterval = null;
 
+    // Configurazione WebRTC con STUN Server gratuiti per reti 4G/5G
+    const peerConfig = {
+        config: {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+                { urls: 'stun:stun2.l.google.com:19302' },
+                { urls: 'stun:stun3.l.google.com:19302' }
+            ]
+        }
+    };
+
     const questions = [
         { q: "Qual è la capitale della Spagna?", a: ["Barcellona", "Madrid", "Siviglia", "Valencia"], correct: 1 },
         { q: "Quanti pianeti ci sono nel Sistema Solare?", a: ["7", "8", "9", "10"], correct: 1 },
         { q: "Chi ha dipinto la Gioconda?", a: ["Michelangelo", "Raffaello", "Leonardo da Vinci", "Donatello"], correct: 2 }
     ];
     let currentRound = 0;
-
-    let players = []; // { id, name, score, answer, inganno, target }
+    let players = [];
 
     function createRoom() {
-        myName = document.getElementById('player-name').value || 'Giocatore Host';
+        myName = document.getElementById('player-name').value.trim() || 'Host';
         roomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
         isHost = true;
 
-        peer = new Peer('TRIVIA-' + roomCode);
+        alert("Creazione stanza in corso... Attendi 2 secondi.");
+
+        peer = new Peer('TRIVIA-' + roomCode, peerConfig);
 
         peer.on('open', (id) => {
             showScreen('screen-waiting');
@@ -155,15 +168,28 @@
             connections.push(conn);
             conn.on('data', (data) => handleHostMessage(data, conn));
         });
+
+        peer.on('error', (err) => {
+            alert("Errore creazione stanza: " + err.type);
+        });
     }
 
     function joinRoom() {
-        myName = document.getElementById('player-name').value || 'Giocatore';
-        roomCode = document.getElementById('room-code-input').value.toUpperCase();
+        myName = document.getElementById('player-name').value.trim() || 'Giocatore';
+        roomCode = document.getElementById('room-code-input').value.trim().toUpperCase();
 
-        peer = new Peer();
+        if (!roomCode) {
+            alert("Inserisci il codice di 4 lettere!");
+            return;
+        }
+
+        alert("Connessione alla stanza " + roomCode + " in corso...");
+
+        peer = new Peer(peerConfig);
+
         peer.on('open', (id) => {
             hostConn = peer.connect('TRIVIA-' + roomCode);
+
             hostConn.on('open', () => {
                 hostConn.send({ type: 'JOIN', name: myName, id: peer.id });
                 showScreen('screen-waiting');
@@ -171,13 +197,27 @@
             });
 
             hostConn.on('data', (data) => handleClientMessage(data));
+
+            // Timeout se l'host non risponde entro 8 secondi
+            setTimeout(() => {
+                if (!hostConn || !hostConn.open) {
+                    alert("Impossibile connettersi. Verifica che l'Host abbia già creato la stanza!");
+                }
+            }, 8000);
+        });
+
+        peer.on('error', (err) => {
+            alert("Errore di connessione: " + err.type);
         });
     }
 
     // MESSAGE HANDLING (HOST)
     function handleHostMessage(data, conn) {
         if (data.type === 'JOIN') {
-            players.push({ id: data.id, name: data.name, score: 300, answer: null, inganno: null, target: null });
+            // Evita duplicati
+            if (!players.some(p => p.id === data.id)) {
+                players.push({ id: data.id, name: data.name, score: 300, answer: null, inganno: null, target: null });
+            }
             broadcast({ type: 'PLAYER_LIST', players: players });
             updatePlayersList();
         }
@@ -206,7 +246,9 @@
     }
 
     function broadcast(data) {
-        connections.forEach(c => c.send(data));
+        connections.forEach(c => {
+            if (c.open) c.send(data);
+        });
     }
 
     function showScreen(id) {
@@ -255,7 +297,6 @@
             btn.classList.remove('selected');
         }
 
-        // START TIMER 15s
         let timerFill = document.getElementById('timer');
         timerFill.style.width = '100%';
         let timeLeft = 15;
@@ -288,7 +329,7 @@
         document.getElementById('my-score').innerText = myScore;
         usedInganno = { name: name, cost: cost };
         targetPlayerId = target;
-        alert(`Inganno ${name} lanciato!`);
+        alert(`Inganno ${name} attivato!`);
     }
 
     function submitTurnAction() {
@@ -302,22 +343,20 @@
 
         if (isHost) {
             handleHostMessage(payload, null);
-        } else {
+        } else if (hostConn && hostConn.open) {
             hostConn.send(payload);
         }
     }
 
-    // RESOLVE TURN LOGIC (HOST ONLY)
     function resolveTurn() {
         let q = questions[currentRound];
 
         players.forEach(p => {
-            // Check debuffs
             let isShielded = players.some(x => x.target === p.id && x.inganno?.name === 'Scudo');
             let isSilenced = players.some(x => x.target === p.id && x.inganno?.name === 'Silenzia') && !isShielded;
             let isFlipped = players.some(x => x.target === p.id && x.inganno?.name === 'Sotto Sopra') && !isShielded;
 
-            if (isSilenced) return; // 0 Punti
+            if (isSilenced) return;
 
             let correct = p.answer === q.correct;
             if (isFlipped) correct = !correct;
@@ -353,9 +392,7 @@
         if (currentRound < questions.length) {
             sendNextQuestion();
         } else {
-            alert('Partita finita!');
+            alert('Partita completata!');
         }
     }
 </script>
-</body>
-</html>
